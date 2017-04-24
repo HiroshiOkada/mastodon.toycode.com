@@ -1,0 +1,7 @@
+.env.production
+cron/
+nginx/ssl/server.crt
+nginx/ssl/server.key
+postgres/
+public/
+redis/
