@@ -35,6 +35,7 @@ services:
     volumes:
       - ./public/assets:/mastodon/public/assets
       - ./public/system:/mastodon/public/system
+      - ./public/packs:/mastodon/public/packs
 
   streaming:
     restart: always
