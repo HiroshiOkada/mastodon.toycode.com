@@ -26,7 +26,7 @@ services:
 
   web:
     restart: always
-    image: gargron/mastodon:v1.5.0
+    image: gargron/mastodon:v1.6.0
     env_file: .env.production
     command: bundle exec rails s -p 3000 -b '0.0.0.0'
     depends_on:
@@ -39,7 +39,7 @@ services:
 
   streaming:
     restart: always
-    image: gargron/mastodon:v1.5.0
+    image: gargron/mastodon:v1.6.0
     env_file: .env.production
     command: npm run start
     depends_on:
@@ -48,7 +48,7 @@ services:
 
   sidekiq:
     restart: always
-    image: gargron/mastodon:v1.5.0
+    image: gargron/mastodon:v1.6.0
     env_file: .env.production
     command: bundle exec sidekiq -q default -q mailers -q pull -q push
     depends_on:
@@ -56,25 +56,4 @@ services:
       - redis
     volumes:
       - ./public/system:/mastodon/public/system
-
-  cron:
-    restart: always
-    image: gargron/mastodon:v1.5.0
-    env_file: .env.production
-    command: |
-      sh -c 'sh -s <<EOF
-        trap "break;exit" SIGHUP SIGINT SIGTERM
-        while /bin/true; do
-          /bin/date -Ihours 
-          /usr/bin/time rake mastodon:daily 
-          /bin/sleep 1439m
-        done >>/var/log/cron.log 2>&1
-      EOF'
-    depends_on:
-      - db
-      - redis
-    volumes:
-      - ./public/assets:/mastodon/public/assets
-      - ./public/system:/mastodon/public/system
-      - ./cron/log:/var/log
 
